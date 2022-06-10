@@ -1,0 +1,29 @@
+CREATE TABLE Instructor(
+	instructorID VARCHAR(30) NOT NULL PRIMARY KEY, 
+	instructorName NVARCHAR(50) NOT NULL,
+)
+
+CREATE TABLE Student(
+	studentID VARCHAR(30) NOT NULL PRIMARY KEY,
+	studentNumber VARCHAR(50) NOT NULL,
+	studentSurname NVARCHAR(30) NOT NULL,
+	studentMiddlename NVARCHAR(30) NOT NULL,
+	studentGivenname NVARCHAR(30) NOT NULL,
+	studentImage BIT NOT NULL,
+	studentEmail VARCHAR(100)
+)
+
+CREATE TABLE Course(
+	courseID VARCHAR(30) NOT NULL PRIMARY KEY,
+	courseName VARCHAR(70) NOT NULL,
+)
+
+CREATE TABLE Room(
+	roomID VARCHAR(30) NOT NULL PRIMARY KEY
+)
+
+CREATE TABLE Timeslot(
+	timeslotID VARCHAR(30) NOT NULL PRIMARY KEY,
+	timeStart TIME NOT NULL,
+	timeEnd TIME NOT NULL
+)
