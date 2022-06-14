@@ -113,9 +113,9 @@ INSERT INTO Timeslot VALUES
 ('Slot 8','19:30:00','21:00:00')
 
 INSERT INTO Instructor VALUES
-('sonnt5',N'Ngô Tùng Sơn', 'sonnt69@fe.edu.vn'),
-('caupd', N'Phan Đăng Cầu', 'caupd@fe.edu.vn'),
-('hoaptt8', N'Phạm Thị Thanh Hoa', 'hoaptt8@fe.edu.vn'),
-('annt79', N'Nguyễn Tân Ân', 'annt79@fpt.edu.vn'),
-('hailt' ,N'Lê Thanh Hải', 'HaiLT10@fe.edu.vn'),
-('Keiichiro', N'Someya Keiichiro', 'Keiichiro@fe.edu.vn')
+('sonnt5',N'Ngô Tùng Sơn'),
+('caupd', N'Phan Đăng Cầu'),
+('hoaptt8', N'Phạm Thị Thanh Hoa'),
+('annt79', N'Nguyễn Tân Ân'),
+('hailt' ,N'Lê Thanh Hải'),
+('Keiichiro', N'Someya Keiichiro')
