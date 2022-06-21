@@ -51,7 +51,7 @@
                                             <c:set var = "flag" value = "true"/>
                                             <td>
                                                 <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">${se.groupID.courseID.courseName}</span>
-                                                <div class="font-size13 text-light-gray">${se.roomID.roomID}</div>
+                                                <div class="font-size13 text-light-gray">at ${se.roomID.roomID}</div>
                                                 <div class="margin-10px-top font-size14">${se.timeslotID.start}-${se.timeslotID.end}</div>
                                             </td>
                                         </c:if>
