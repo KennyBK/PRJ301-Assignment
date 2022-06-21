@@ -17,8 +17,17 @@ public class Student {
     String StudentMiddlename;
     String StudentGivenname;
     String StudentEmail;
+    Group GroupID;
     ArrayList<Attendance> attendances = new ArrayList<>();
     ArrayList<StudentGroup> studentgroups = new ArrayList<>();
+
+    public Group getGroupID() {
+        return GroupID;
+    }
+
+    public void setGroupID(Group GroupID) {
+        this.GroupID = GroupID;
+    }
 
     public ArrayList<Attendance> getAttendances() {
         return attendances;

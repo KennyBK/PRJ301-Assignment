@@ -4,9 +4,17 @@
         <servlet-name>ScheduleController</servlet-name>
         <servlet-class>controller.ScheduleController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FilterController</servlet-name>
+        <servlet-class>controller.FilterController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ScheduleController</servlet-name>
         <url-pattern>/Schedule</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterController</servlet-name>
+        <url-pattern>/Filter</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

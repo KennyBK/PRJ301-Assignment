@@ -15,8 +15,17 @@ public class Group {
     String GroupName;
     Instructor InstructorID;
     Course CourseID;
+    Student StudentID;
     ArrayList<Session> sessions = new ArrayList<>();
     ArrayList<StudentGroup> studentgroups = new ArrayList<>();
+
+    public Student getStudentID() {
+        return StudentID;
+    }
+
+    public void setStudentID(Student StudentID) {
+        this.StudentID = StudentID;
+    }
 
     public ArrayList<Session> getSessions() {
         return sessions;
