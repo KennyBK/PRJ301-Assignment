@@ -1,0 +1,23 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jun 22, 2022, 11:49:43 AM
+    Author     : ACER
+*/
+.th-heigh-width{
+    width: 10%;
+}
+
+.th-heigh-width:first-child{
+    width: 5%;
+}
+
+.course-color{
+    color: blue;
+}
+
+.room-color{
+    color: red;
+}

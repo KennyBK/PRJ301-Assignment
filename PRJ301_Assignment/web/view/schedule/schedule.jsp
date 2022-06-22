@@ -11,35 +11,32 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous"> 
+        <link href="css/schedule/schedule.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <div class="container">
-            <div class="timetable-img text-center">
-                <img src="img/content/timetable.png" alt="">
-            </div>
             <div class="table-responsive">
                 <table class="table table-bordered text-center">
-                    <thead>
-                        <tr class="bg-light-gray">
-                            <th rowspan="2" class="text-uppercase text-center">Time
-                            </th>
-                            <th class="text-uppercase text-center">Monday</th>
-                            <th class="text-uppercase text-center">Tuesday</th>
-                            <th class="text-uppercase text-center">Wednesday</th>
-                            <th class="text-uppercase text-center">Thursday</th>
-                            <th class="text-uppercase text-center">Friday</th>
-                            <th class="text-uppercase text-center">Saturday</th>
-                            <th class="text-uppercase text-center">Sunday</th>
+                    <thead class="thead-light">
+                        <tr>
+                            <th rowspan="2" class="text-uppercase align-middle th-heigh-width">Time</th>
+                            <th class="text-uppercase th-heigh-width">Monday</th>
+                            <th class="text-uppercase th-heigh-width">Tuesday</th>
+                            <th class="text-uppercase th-heigh-width">Wednesday</th>
+                            <th class="text-uppercase th-heigh-width">Thursday</th>
+                            <th class="text-uppercase th-heigh-width">Friday</th>
+                            <th class="text-uppercase th-heigh-width">Saturday</th>
+                            <th class="text-uppercase th-heigh-width">Sunday</th>
 
                         </tr>
                         <tr>
                             <c:forEach items="${requestScope.datesinweek}" var="d">
-                                <th class="text-uppercase text-center">${d}</th>
+                                <th class="align-middle">${d}</th>
                                 </c:forEach>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody >
                         <c:forEach items="${requestScope.timeslots}" var="t">     
                             <tr>   
                                 <td class="align-middle">${t.timeslotID}</td>
@@ -50,9 +47,11 @@
                                         <c:if test="${(se.timeslotID.timeslotID eq t.timeslotID) and (se.sessionDate eq d)}">
                                             <c:set var = "flag" value = "true"/>
                                             <td>
-                                                <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">${se.groupID.courseID.courseName}</span>
-                                                <div class="font-size13 text-light-gray">at ${se.roomID.roomID}</div>
-                                                <div class="margin-10px-top font-size14">${se.timeslotID.start}-${se.timeslotID.end}</div>
+                                                <span class="xs-font-size13 course-color">${se.groupID.courseID.courseName}</span>
+                                                <div>at 
+                                                    <span class="room-color">${se.roomID.roomID}</span>
+                                                </div>
+                                                <div>${se.timeslotID.start}-${se.timeslotID.end}</div>
                                             </td>
                                         </c:if>
                                     </c:forEach>
