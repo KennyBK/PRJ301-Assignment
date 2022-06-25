@@ -11,11 +11,11 @@ import java.sql.Time;
  * @author ACER
  */
 public class Attendance {
-    Student StudentID;
-    Session SessionID;
-    String status;
-    Time Recordtime;
-    String commment;
+    private Student StudentID;
+    private Session SessionID;
+    private String status;
+    private Time Recordtime;
+    private String commment;
 
     public Student getStudentID() {
         return StudentID;

@@ -11,10 +11,10 @@ import java.util.ArrayList;
  * @author ACER
  */
 public class Instructor {
-    String InstructorID;
-    String InstructorName;
-    String InstructorEmail;
-    ArrayList<Group> groups = new ArrayList<>();
+    private String InstructorID;
+    private String InstructorName;
+    private String InstructorEmail;
+    private ArrayList<Group> groups = new ArrayList<>();
 
     public ArrayList<Group> getGroups() {
         return groups;

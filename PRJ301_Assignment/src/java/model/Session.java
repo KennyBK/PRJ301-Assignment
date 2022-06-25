@@ -12,14 +12,14 @@ import java.util.ArrayList;
  * @author ACER
  */
 public class Session {
-    int SessionID;
-    int SessionNumber;
-    Date SessionDate;
-    String Semester;
-    Room RoomID;
-    Timeslot TimeslotID;
-    Group GroupID;
-    ArrayList<Attendance> attendances = new ArrayList<>();
+    private int SessionID;
+    private int SessionNumber;
+    private Date SessionDate;
+    private String Semester;
+    private Room RoomID;
+    private Timeslot TimeslotID;
+    private Group GroupID;
+    private ArrayList<Attendance> attendances = new ArrayList<>();
 
     public ArrayList<Attendance> getAttendances() {
         return attendances;

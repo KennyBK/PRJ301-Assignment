@@ -16,11 +16,16 @@
     </head>
     <body>
         <div class="container">
+            <div>Student: A</div>
             <div class="table-responsive">
                 <table class="table table-bordered text-center">
                     <thead class="thead-light">
                         <tr>
-                            <th rowspan="2" class="text-uppercase align-middle th-heigh-width">Time</th>
+                            <th rowspan="2" class="text-uppercase align-middle th-heigh-width">Time
+                                <select>
+                                    <option>09/05/2022 - 15/05/2022</option>
+                                </select>
+                            </th>
                             <th class="text-uppercase th-heigh-width">Monday</th>
                             <th class="text-uppercase th-heigh-width">Tuesday</th>
                             <th class="text-uppercase th-heigh-width">Wednesday</th>

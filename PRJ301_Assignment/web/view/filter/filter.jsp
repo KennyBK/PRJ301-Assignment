@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     </head>
     <body>
-        <table>
+        <table >
             <thead>
                 <tr>
                     <th>Course</th>
@@ -25,7 +25,7 @@
                 <tr>
                     <td valign='top'>
                         <div id="ctl00_mainContent_divCourse">
-                            <table>
+                            <table class="table">
                                 <c:forEach items="${requestScope.courses}" var="c">
                                     <tr>
                                         <td>
@@ -46,7 +46,7 @@
                     </td>
                     <td valign='top'>
                         <div id="ctl00_mainContent_divGroup">
-                            <table>
+                            <table class="table">
                                 <c:forEach items="${requestScope.groups}" var="g">
                                     <tr>
                                         <td>
@@ -70,7 +70,7 @@
 
         <c:if test="${students.size() gt 0}">
             <div id="ctl00_mainContent_divStudents">
-                <table class="sortable" id="id">
+                <table class="sortable table" id="id">
                     <thead>
                         <tr>
                             <th>Index</th>

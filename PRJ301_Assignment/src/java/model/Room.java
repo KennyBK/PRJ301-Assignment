@@ -11,8 +11,8 @@ import java.util.ArrayList;
  * @author ACER
  */
 public class Room {
-    String RoomID;
-    ArrayList<Session> sessions = new ArrayList<>();
+    private String RoomID;
+    private ArrayList<Session> sessions = new ArrayList<>();
 
     public ArrayList<Session> getSessions() {
         return sessions;

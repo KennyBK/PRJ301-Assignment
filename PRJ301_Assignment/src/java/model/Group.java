@@ -11,13 +11,13 @@ import java.util.ArrayList;
  * @author ACER
  */
 public class Group {
-    int GroupID;
-    String GroupName;
-    Instructor InstructorID;
-    Course CourseID;
-    Student StudentID;
-    ArrayList<Session> sessions = new ArrayList<>();
-    ArrayList<StudentGroup> studentgroups = new ArrayList<>();
+    private int GroupID;
+    private String GroupName;
+    private Instructor InstructorID;
+    private Course CourseID;
+    private Student StudentID;
+    private ArrayList<Session> sessions = new ArrayList<>();
+    private ArrayList<StudentGroup> studentgroups = new ArrayList<>();
 
     public Student getStudentID() {
         return StudentID;

@@ -11,15 +11,15 @@ import java.util.ArrayList;
  * @author ACER
  */
 public class Student {
-    String StudentID;
-    String StudentCode;
-    String StudentSurname;
-    String StudentMiddlename;
-    String StudentGivenname;
-    String StudentEmail;
-    Group GroupID;
-    ArrayList<Attendance> attendances = new ArrayList<>();
-    ArrayList<StudentGroup> studentgroups = new ArrayList<>();
+    private String StudentID;
+    private String StudentCode;
+    private String StudentSurname;
+    private String StudentMiddlename;
+    private String StudentGivenname;
+    private String StudentEmail;
+    private Group GroupID;
+    private ArrayList<Attendance> attendances = new ArrayList<>();
+    private ArrayList<StudentGroup> studentgroups = new ArrayList<>();
 
     public Group getGroupID() {
         return GroupID;

@@ -9,8 +9,8 @@ package model;
  * @author ACER
  */
 public class StudentGroup {
-    Student StudentID;
-    Group GroupID;
+    private Student StudentID;
+    private Group GroupID;
 
     public Student getStudentID() {
         return StudentID;

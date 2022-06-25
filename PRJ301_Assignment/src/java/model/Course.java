@@ -11,9 +11,9 @@ import java.util.ArrayList;
  * @author ACER
  */
 public class Course {
-    String CourseID;
-    String CourseName;
-    ArrayList<Group> groups = new ArrayList<>();
+    private String CourseID;
+    private String CourseName;
+    private ArrayList<Group> groups = new ArrayList<>();
 
     public ArrayList<Group> getGroups() {
         return groups;

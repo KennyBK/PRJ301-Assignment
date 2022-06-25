@@ -12,10 +12,10 @@ import java.util.ArrayList;
  * @author ACER
  */
 public class Timeslot {
-    String TimeslotID;
-    Time start;
-    Time end;
-    ArrayList<Session> sessions = new ArrayList<>();
+    private String TimeslotID;
+    private Time start;
+    private Time end;
+    private ArrayList<Session> sessions = new ArrayList<>();
 
     public ArrayList<Session> getSessions() {
         return sessions;
