@@ -8,6 +8,14 @@
         <servlet-name>FilterController</servlet-name>
         <servlet-class>controller.FilterController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ChooseController</servlet-name>
+        <servlet-class>controller.ChooseController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AttendanceController</servlet-name>
+        <servlet-class>controller.AttendanceController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ScheduleController</servlet-name>
         <url-pattern>/Schedule</url-pattern>
@@ -15,6 +23,14 @@
     <servlet-mapping>
         <servlet-name>FilterController</servlet-name>
         <url-pattern>/Filter</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChooseController</servlet-name>
+        <url-pattern>/Choose</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AttendanceController</servlet-name>
+        <url-pattern>/Attendance</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

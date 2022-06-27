@@ -69,6 +69,54 @@ public class SessionDBContext extends DBContext<Session> {
         return sessions;
     }
 
+    public ArrayList<Session> getSessionInADay(String instructorID, Date date) {
+        ArrayList<Session> sessions = new ArrayList<>();
+        try {
+            String sql = "Select se.SessionID,se.SessionNumber,se.SessionDate,se.Semester,r.RoomID,t.TimeslotID,g.GroupID,t.[start],t.[end],g.GroupName,i.InstructorID,c.CourseID,c.CourseName,i.InstructorName\n"
+                    + "From \n"
+                    + "[Session] se join Timeslot t on se.TimeslotID = t.TimeslotID\n"
+                    + "join Room r on se.RoomID = r.RoomID \n"
+                    + "join [Group] g on se.GroupID = g.GroupID\n"
+                    + "join Course c on g.CourseID =  c.CourseID\n"
+                    + "join Instructor i on g.InstructorID = i.InstructorID\n"
+                    + "Where i.InstructorID = ? AND se.SessionDate = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, instructorID);
+            stm.setDate(2, date);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Session se = new Session();
+                se.setSessionID(rs.getInt("SessionID"));
+                se.setSessionNumber(rs.getInt("SessionNumber"));
+                se.setSessionDate(rs.getDate("SessionDate"));
+                se.setSemester(rs.getString("Semester"));
+                Room r = new Room();
+                r.setRoomID(rs.getString("RoomID"));
+                se.setRoomID(r);
+                Group g = new Group();
+                g.setGroupID(rs.getInt("GroupID"));
+                g.setGroupName(rs.getString("GroupName"));
+                Instructor i = new Instructor();
+                i.setInstructorID(rs.getString("InstructorID"));
+                g.setInstructorID(i);
+                Course c = new Course();
+                c.setCourseID(rs.getString("CourseID"));
+                c.setCourseName(rs.getString("CourseName"));
+                g.setCourseID(c);
+                se.setGroupID(g);
+                Timeslot ts = new Timeslot();
+                ts.setTimeslotID(rs.getString("TimeslotID"));
+                ts.setStart(rs.getTime("start"));
+                ts.setEnd(rs.getTime("end"));
+                se.setTimeslotID(ts);
+                sessions.add(se);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SessionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sessions;
+    }
+
     @Override
     public ArrayList<Session> list() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
