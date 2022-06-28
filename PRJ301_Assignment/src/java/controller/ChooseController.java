@@ -46,7 +46,7 @@ public class ChooseController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         SessionDBContext sdb = new SessionDBContext();
-        ArrayList<Session> sessionInADay = sdb.getSessionInADay("hongdt30", Date.valueOf("2022-05-10"));
+        ArrayList<Session> sessionInADay = sdb.getSessionInADay("sonnt5", Date.valueOf("2022-06-03"));
         request.setAttribute("sessions", sessionInADay);
         request.getRequestDispatcher("view/attendance/choose.jsp").forward(request, response);
     } 

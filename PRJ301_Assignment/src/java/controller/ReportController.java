@@ -6,6 +6,8 @@
 package controller;
 
 import dal.AttendanceDBContext;
+import dal.GroupDBContext;
+import dal.SessionDBContext;
 import dal.StudentDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,9 +15,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.Time;
 import java.util.ArrayList;
 import model.Attendance;
+import model.Group;
 import model.Session;
 import model.Student;
 
@@ -23,7 +25,7 @@ import model.Student;
  *
  * @author ACER
  */
-public class AttendanceController extends HttpServlet {
+public class ReportController extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -34,7 +36,9 @@ public class AttendanceController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
+        GroupDBContext gdb = new GroupDBContext();
+        ArrayList<Group> listGroupByInstructor = gdb.listGroupByInstructor("sonnt5");
+        request.setAttribute("groups", listGroupByInstructor);
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -45,19 +49,13 @@ public class AttendanceController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    String sessionID;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        StudentDBContext sdb = new StudentDBContext();
-        String groupID = request.getParameter("group");
-        sessionID = request.getParameter("session");
-        ArrayList<Student> listStudentInAGroup = sdb.listStudentInAGroup(new Integer(groupID));
-        request.setAttribute("students", listStudentInAGroup);
-        request.getRequestDispatcher("view/attendance/attendance.jsp").forward(request, response);
+        processRequest(request, response);
+        request.getRequestDispatcher("view/attendance/report.jsp").forward(request, response);
     } 
-    
-    
+
     /** 
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
@@ -68,27 +66,19 @@ public class AttendanceController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        Session se = new Session();
-        se.setSessionID(Integer.parseInt(sessionID));
-        String[] indexes = request.getParameterValues("indexes");
-        
-        ArrayList<Attendance> attendances = new ArrayList<>();
-        
-        for (String index : indexes) {
-            Attendance a = new Attendance();
-            a.setSessionID(se);
-            Student s = new Student();
-            s.setStudentID(request.getParameter("studentID" + index));
-            a.setStudentID(s);
-            a.setStatus(request.getParameter("status" + index));
-            a.setCommment(request.getParameter("comment" + index));
-            Time t = Time.valueOf(request.getParameter("recordtime" + index));
-            a.setRecordtime(t);
-            attendances.add(a);
-        }
-        
+        processRequest(request, response);
+        int groupID = Integer.parseInt(request.getParameter("group"));
+        StudentDBContext sdb = new StudentDBContext();
+        ArrayList<Student> listStudentInAGroup = sdb.listStudentInAGroup(groupID);
+        SessionDBContext sedb = new SessionDBContext();
+        ArrayList<Session> listSessionInAGroup = sedb.listSessionInAGroup(groupID);
         AttendanceDBContext adb = new AttendanceDBContext();
-        adb.takeAttendances(attendances);
+        ArrayList<Attendance> listAttendanceInAGroup = adb.listAttendanceInAGroup(groupID);
+        
+        request.setAttribute("attendances", listAttendanceInAGroup);
+        request.setAttribute("sessions", listSessionInAGroup);
+        request.setAttribute("students", listStudentInAGroup);
+        request.getRequestDispatcher("view/attendance/report.jsp").forward(request, response);
     }
 
     /** 

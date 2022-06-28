@@ -51,7 +51,7 @@
                     <input type="text" value="19:00:00" name="recordtime${loop.index+1}" hidden/>
                 </tr>
             </c:forEach>
-                <input type="text" value="${requestScope.sessionID}" name="sessionID" hidden/>
+               
                 </tbody>
             </table>
             <input type="submit" value="Take"/>

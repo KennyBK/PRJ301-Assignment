@@ -51,7 +51,34 @@ public class GroupDBContext extends DBContext<Group> {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, CourseID);
             ResultSet rs = stm.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
+                Group g = new Group();
+                g.setGroupID(rs.getInt("GroupID"));
+                g.setGroupName(rs.getString("GroupName"));
+                Instructor i = new Instructor();
+                i.setInstructorID(rs.getString("InstructorID"));
+                g.setInstructorID(i);
+                Course c = new Course();
+                c.setCourseID(rs.getString("CourseId"));
+                c.setCourseName(rs.getString("CourseName"));
+                g.setCourseID(c);
+                groups.add(g);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GroupDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return groups;
+    }
+
+    public ArrayList<Group> listGroupByInstructor(String InstructorID) {
+        ArrayList<Group> groups = new ArrayList<>();
+        try {
+            String sql = "SELECT g.GroupID,g.GroupName,g.InstructorID,c.CourseID,c.CourseName FROM [Group] g join Course c on g.CourseID = c.CourseID\n"
+                    + "Where InstructorID = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, InstructorID);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
                 Group g = new Group();
                 g.setGroupID(rs.getInt("GroupID"));
                 g.setGroupName(rs.getString("GroupName"));

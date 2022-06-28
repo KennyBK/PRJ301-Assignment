@@ -117,6 +117,38 @@ public class SessionDBContext extends DBContext<Session> {
         return sessions;
     }
 
+    public ArrayList<Session> listSessionInAGroup(int groupID) {
+        ArrayList<Session> sessions = new ArrayList<>();
+        try {
+            String sql = "SELECT SessionID,SessionNumber,SessionDate,Semester,RoomID,TimeslotID,GroupID \n"
+                    + "FROM [Session] \n"
+                    + "Where GroupID = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, groupID);
+            ResultSet rs = stm.executeQuery();
+            while(rs.next()){
+                Session se = new Session();
+                se.setSessionID(rs.getInt("SessionID"));
+                se.setSessionNumber(rs.getInt("SessionNumber"));
+                se.setSessionDate(rs.getDate("SessionDate"));
+                se.setSemester(rs.getString("Semester"));
+                Room r = new Room();
+                r.setRoomID(rs.getString("RoomID"));
+                se.setRoomID(r);
+                Timeslot t = new Timeslot();
+                t.setTimeslotID(rs.getString("TimeslotID"));
+                se.setTimeslotID(t);
+                Group g = new Group();
+                g.setGroupID(groupID);
+                se.setGroupID(g);
+                sessions.add(se);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SessionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sessions;
+    }
+
     @Override
     public ArrayList<Session> list() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
