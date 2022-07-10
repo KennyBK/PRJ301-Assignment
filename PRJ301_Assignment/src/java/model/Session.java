@@ -19,7 +19,16 @@ public class Session {
     private Room RoomID;
     private Timeslot TimeslotID;
     private Group GroupID;
+    private Instructor InstructorID;
     private ArrayList<Attendance> attendances = new ArrayList<>();
+
+    public Instructor getInstructorID() {
+        return InstructorID;
+    }
+
+    public void setInstructorID(Instructor InstructorID) {
+        this.InstructorID = InstructorID;
+    }
 
     public ArrayList<Attendance> getAttendances() {
         return attendances;

@@ -24,6 +24,24 @@
                     <thead class="thead-light">
                         <tr>
                             <th rowspan="2" class="text-uppercase align-middle th-heigh-width">Time
+                                <form id="year" method="POST">
+                                    <jsp:useBean id="now" class="java.util.Date" />
+                                    <fmt:formatDate var="year" value="${now}" pattern="yyyy" />
+                                    <select onchange="document.getElementById('year').submit();" name="year">
+                                        <c:forEach items="${requestScope.years}" var="y">
+                                            <option value="${y}"
+                                                    <c:choose>
+                                                        <c:when test="${param.year eq null && year eq y}">
+                                                            selected
+                                                        </c:when>
+                                                        <c:when test="${param.year eq y}">
+                                                            selected
+                                                        </c:when>
+                                                    </c:choose>
+                                                    >${y}</option>
+                                        </c:forEach>
+                                    </select>
+                                </form>
                                 <form id="timepaging" method="POST">
                                     <select onchange="document.getElementById('timepaging').submit();" name="period">
                                         <c:forEach items="${requestScope.weekinayear}" var="w">
@@ -33,9 +51,12 @@
                                                     </c:if>
                                                     ><fmt:formatDate value="${w.value[0]}" pattern="dd/MM"/>
                                                 - 
-                                                <fmt:formatDate value="${w.value[1]}" pattern="dd/MM"/></option>
-                                            </c:forEach>
+                                                <fmt:formatDate value="${w.value[1]}" pattern="dd/MM"/>
+                                            </option>
+                                        </c:forEach>
                                     </select>
+                                    <fmt:formatDate var="year" value="${weekinayear[(1).intValue()][0]}" pattern="yyyy"/>
+                                    <input type="hidden" value="${year}" name="year" />
                                 </form>
                             </th>
                             <th class="text-uppercase th-heigh-width">Monday</th>
@@ -49,7 +70,7 @@
                         </tr>
                         <tr>
                             <c:forEach items="${requestScope.datesinweek}" var="d">
-                                <th class="align-middle">${d}</th>
+                                <th class="align-middle"><fmt:formatDate value="${d}" pattern="dd/MM"/></th>
                                 </c:forEach>
                         </tr>
                     </thead>
@@ -69,7 +90,20 @@
                                                     <span class="room-color">${se.roomID.roomID}</span>
                                                 </div>
                                                 <div>${se.timeslotID.start}-${se.timeslotID.end}</div>
+                                                <div>by ${se.instructorID.instructorName}</div> 
+                                                
                                             </td>
+                                            <div class="modal-container">
+                                                    <div class="my-modal">
+                                                        <div>Date: ${se.sessionDate} </div>
+                                                        <div>Slot: ${se.timeslotID.start} - ${se.timeslotID.end} </div>
+                                                        <div>Room: ${se.roomID.roomID} </div>
+                                                        <div>Group: ${se.groupID.groupID} </div>
+                                                        <div>Instructor: ${se.instructorID.instructorID} </div>
+                                                        <div>Course: ${se.groupID.courseID.courseID} </div>
+                                                        <div>Course session number: ${se.sessionNumber} </div>
+                                                    </div>
+                                                </div>
                                         </c:if>
                                     </c:forEach>
                                     <c:if test="${not flag}">

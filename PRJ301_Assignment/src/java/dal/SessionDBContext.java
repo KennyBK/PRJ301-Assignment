@@ -27,10 +27,11 @@ public class SessionDBContext extends DBContext<Session> {
     public ArrayList<Session> getListSessionInSpecificWeek(Date startWeek, Date endWeek) {
         ArrayList<Session> sessions = new ArrayList<>();
         try {
-            String sql = "Select ts.TimeslotID,ts.[start],ts.[end],se.SessionID,se.SessionNumber,se.SessionDate,se.Semester,se.RoomID,g.GroupID,g.GroupName,g.InstructorID,c.CourseID,c.CourseName from Timeslot ts \n"
+            String sql = "Select ts.TimeslotID,ts.[start],ts.[end],se.SessionID,se.SessionNumber,se.SessionDate,se.Semester,se.RoomID,se.InstructorID,i.InstructorName,g.GroupID,g.GroupName,g.InstructorID,c.CourseID,c.CourseName from Timeslot ts \n"
                     + "join [Session] se On ts.TimeslotID = se.TimeslotID \n"
                     + "join [Group] g On se.GroupID = g.GroupID\n"
                     + "join Course c On g.CourseID = c.CourseID\n"
+                    + "join Instructor i on se.InstructorID = i.InstructorID\n"
                     + "Where SessionDate Between ? And ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setDate(1, startWeek);
@@ -42,6 +43,10 @@ public class SessionDBContext extends DBContext<Session> {
                 se.setSessionNumber(rs.getInt("SessionNumber"));
                 se.setSessionDate(rs.getDate("SessionDate"));
                 se.setSemester(rs.getString("Semester"));
+                Instructor ise = new Instructor();
+                ise.setInstructorID(rs.getString("InstructorID"));
+                ise.setInstructorName(rs.getString("InstructorName"));
+                se.setInstructorID(ise);
                 Room r = new Room();
                 r.setRoomID(rs.getString("RoomID"));
                 se.setRoomID(r);
@@ -126,7 +131,7 @@ public class SessionDBContext extends DBContext<Session> {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, groupID);
             ResultSet rs = stm.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Session se = new Session();
                 se.setSessionID(rs.getInt("SessionID"));
                 se.setSessionNumber(rs.getInt("SessionNumber"));
@@ -156,7 +161,47 @@ public class SessionDBContext extends DBContext<Session> {
 
     @Override
     public Session get(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            String sql = "SELECT [SessionID],[SessionNumber],[SessionDate],[Semester],[RoomID],ts.[TimeslotID],ts.[start],ts.[end],g.[GroupID],g.GroupName,c.CourseID,c.CourseName,se.[InstructorID]\n"
+                    + "  FROM [dbo].[Session] se join [Group] g on se.GroupID = g.GroupID\n"
+                    + "  join Course c on g.CourseID = c.CourseID\n"
+                    + "  join Timeslot ts on se.TimeslotID = ts.TimeslotID\n"
+                    + "  Where SessionID = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                Session se = new Session();
+                se.setSessionID(rs.getInt("SessionID"));
+                se.setSessionNumber(rs.getInt("SessionNumber"));
+                se.setSessionDate(rs.getDate("SessionDate"));
+                se.setSemester(rs.getString("Semester"));
+                Instructor ise = new Instructor();
+                ise.setInstructorID(rs.getString("InstructorID"));
+                se.setInstructorID(ise);
+                Room r = new Room();
+                r.setRoomID(rs.getString("RoomID"));
+                se.setRoomID(r);
+                Group g = new Group();
+                g.setGroupID(rs.getInt("GroupID"));
+                g.setGroupName(rs.getString("GroupName"));
+                se.setGroupID(g);
+                Course c = new Course();
+                c.setCourseID(rs.getString("CourseID"));
+                c.setCourseName(rs.getString("CourseName"));
+                g.setCourseID(c);
+                se.setGroupID(g);
+                Timeslot ts = new Timeslot();
+                ts.setTimeslotID(rs.getString("TimeslotID"));
+                ts.setStart(rs.getTime("start"));
+                ts.setEnd(rs.getTime("end"));
+                se.setTimeslotID(ts);
+                return se;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SessionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     @Override
