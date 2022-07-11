@@ -15,6 +15,75 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous"> 
         <link href="css/schedule/schedule.css" rel="stylesheet" type="text/css"/>
         <script src="js/changeschedule.js" type="text/javascript"></script>
+        <style>
+            .th-heigh-width{
+                width: 10%;
+            }
+
+            .th-heigh-width:first-child{
+                width: 5%;
+            }
+
+            .course-color{
+                color: blue;
+            }
+
+            .room-color{
+                color: red;
+            }
+
+            .modal-container{
+                background-color: rgba(0,0,0,0.3);
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: open 0.5s forwards;
+            }
+
+
+            @keyframes open{
+                0%{
+                    transform: translate(-0%, -0%) scale(0);
+                }
+                50%{
+                    transform: translate(-0%, -0%) scale(1.2);
+                }
+                70%{
+                    transform: translate(-0%, -0%) scale(0.95);
+                }
+                95%{
+                    transform: translate(-0%, -0%) scale(1.1);
+                }
+                100%{
+                    transform: translate(-0%, -0%) scale(1);
+                }
+            }
+            
+            
+            .my-modal{
+                background-color: white;
+                border-radius: 5px;
+                padding: 30px 50px;
+                width: 600px;
+                max-width: 100%;
+                text-align: center;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+
+            .close{
+                text-decoration: none;
+                color: black;
+                cursor: pointer;
+            }
+            .hide{
+                display: none;
+            }
+        </style>
     </head>
     <body>
         <div class="container">
@@ -80,7 +149,7 @@
                                 <td class="align-middle">${t.timeslotID}</td>
                                 <c:forEach items="${requestScope.datesinweek}" var="d" >
                                     <c:set var = "flag" value = "false"/>
-                                    <c:forEach items="${requestScope.sessions}" var="se">
+                                    <c:forEach items="${requestScope.sessions}" var="se" varStatus="loop">
 
                                         <c:if test="${(se.timeslotID.timeslotID eq t.timeslotID) and (se.sessionDate eq d)}">
                                             <c:set var = "flag" value = "true"/>
@@ -91,30 +160,34 @@
                                                 </div>
                                                 <div>${se.timeslotID.start}-${se.timeslotID.end}</div>
                                                 <div>by ${se.instructorID.instructorName}</div> 
-                                                
+                                                <button onclick="document.getElementById('${loop.index}modal').classList.toggle('hide')">View</button>
                                             </td>
-                                            <div class="modal-container">
-                                                    <div class="my-modal">
-                                                        <div>Date: ${se.sessionDate} </div>
-                                                        <div>Slot: ${se.timeslotID.start} - ${se.timeslotID.end} </div>
-                                                        <div>Room: ${se.roomID.roomID} </div>
-                                                        <div>Group: ${se.groupID.groupID} </div>
-                                                        <div>Instructor: ${se.instructorID.instructorID} </div>
-                                                        <div>Course: ${se.groupID.courseID.courseID} </div>
-                                                        <div>Course session number: ${se.sessionNumber} </div>
-                                                    </div>
-                                                </div>
-                                        </c:if>
-                                    </c:forEach>
-                                    <c:if test="${not flag}">
-                                        <td></td>
-                                    </c:if>
-                                </c:forEach>
-                            </tr>
+                                    <div class="modal-container hide" id="${loop.index}modal">
+                                        <div class="my-modal">
+                                            <a class="close" onclick="document.getElementById('${loop.index}modal').classList.toggle('hide')">&times;</a>
+                                            <div>Date: ${se.sessionDate} </div>
+                                            <div>Slot: ${se.timeslotID.start} - ${se.timeslotID.end} </div>
+                                            <div>Room: ${se.roomID.roomID} </div>
+                                            <div>Group: ${se.groupID.groupID} </div>
+                                            <div>Instructor: ${se.instructorID.instructorID} </div>
+                                            <div>Course: ${se.groupID.courseID.courseID} </div>
+                                            <div>Course session number: ${se.sessionNumber} </div>
+                                        </div>
+                                    </div>
+                                </c:if>
+                            </c:forEach>
+                            <c:if test="${not flag}">
+                                <td></td>
+                            </c:if>
                         </c:forEach>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>
         </div>
+        <script>
+
+        </script>
     </body>
 </html>

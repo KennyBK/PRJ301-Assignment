@@ -19,21 +19,29 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 }
 
 .room-color{
-    color: green;
+    color: red;
 }
 
 .modal-container{
+    background-color: rgba(0,0,0,0.3);
+    opacity: 0;
+    pointer-events: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vh;
-    height: 100vh; 
-    background-color: rgba(0,0,0,0.3);
+    width: 100vw;
+    height: 100vh;
     display: flex;
+    align-items: center;
     justify-content: center;
-    align-content: center;
 }
 
 .my-modal{
-    background-color: white
+    background-color: white;
+    border-radius: 5px;
+    padding: 30px 50px;
+    width: 600px;
+    max-width: 100%;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
