@@ -27,7 +27,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach items="${requestScope.sessions}" var="se">
+                        <c:forEach items="${requestScope.sessions}" var="se" varStatus="loop">
                             <tr>
                                 <td>
                                     ${se.timeslotID.start} - ${se.timeslotID.end} ${se.sessionDate}
@@ -41,11 +41,18 @@
                                 <td>
                                     ${se.groupID.courseID.courseName} (${se.groupID.courseID.courseID})
                                 </td>
-                                <td>
-                                    <a href="Attendance?group=${se.groupID.groupID}&session=${se.sessionID}"> Take </a>
-                                </td>
+                                <c:if test="${not requestScope.check[loop.index]}">
+                                    <td>
+                                        <a href="Attendance?group=${se.groupID.groupID}&session=${se.sessionID}"> Take </a>
+                                    </td>
+                                </c:if>
+                                <c:if test="${requestScope.check[loop.index]}">
+                                    <td>
+                                        <a href="View?session=${se.sessionID}"> View </a>
+                                    </td>
+                                </c:if>
                             </tr>
-                            
+
                         </c:forEach>
                     </tbody>
                 </table>

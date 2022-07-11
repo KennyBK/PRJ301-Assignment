@@ -6,23 +6,20 @@
 package controller;
 
 import dal.AttendanceDBContext;
-import dal.SessionDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import model.Session;
+import model.Attendance;
 
 /**
  *
  * @author ACER
  */
-public class ChooseController extends HttpServlet {
+public class EditController extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -47,20 +44,11 @@ public class ChooseController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        LocalDate now = LocalDate.now();
-        Date date = Date.valueOf(now);
-        SessionDBContext sdb = new SessionDBContext();
-        ArrayList<Session> sessionInADay = sdb.getSessionInADay("hongdt30", Date.valueOf("2022-05-10"));
-        ArrayList<Boolean> check = new ArrayList<>();
+        String sessionID = request.getParameter("session");
         AttendanceDBContext adb = new AttendanceDBContext();
-        
-        for (Session se : sessionInADay) {
-            check.add(adb.isTakeAttendance(se.getSessionID()));
-        }
-        
-        request.setAttribute("sessions", sessionInADay);
-        request.setAttribute("check", check);
-        request.getRequestDispatcher("view/attendance/choose.jsp").forward(request, response);
+        ArrayList<Attendance> listAttendanceInASession = adb.listAttendanceInASession(Integer.parseInt(sessionID));
+        request.setAttribute("attendances", listAttendanceInASession);
+        request.getRequestDispatcher("view/attendance/edit.jsp").forward(request, response);
     } 
 
     /** 
@@ -73,7 +61,7 @@ public class ChooseController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
+        processRequest(request, response);
     }
 
     /** 

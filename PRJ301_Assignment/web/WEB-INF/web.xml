@@ -24,6 +24,14 @@
         <servlet-name>DisplaySessionController</servlet-name>
         <servlet-class>controller.DisplaySessionController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EditController</servlet-name>
+        <servlet-class>controller.EditController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewController</servlet-name>
+        <servlet-class>controller.ViewController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ScheduleController</servlet-name>
         <url-pattern>/Schedule</url-pattern>
@@ -47,6 +55,14 @@
     <servlet-mapping>
         <servlet-name>DisplaySessionController</servlet-name>
         <url-pattern>/DisplaySession</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EditController</servlet-name>
+        <url-pattern>/Edit</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewController</servlet-name>
+        <url-pattern>/View</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

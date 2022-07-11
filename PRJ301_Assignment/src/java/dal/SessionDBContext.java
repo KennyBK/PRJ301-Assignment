@@ -69,7 +69,7 @@ public class SessionDBContext extends DBContext<Session> {
                 sessions.add(se);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(TimeslotDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SessionDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return sessions;
     }
