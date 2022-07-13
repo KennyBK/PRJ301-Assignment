@@ -13,7 +13,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous"> 
-        <link href="css/schedule/schedule.css" rel="stylesheet" type="text/css"/>
+        <!--<link href="css/schedule/schedule.css" rel="stylesheet" type="text/css"/>  -->
         <script src="js/changeschedule.js" type="text/javascript"></script>
         <style>
             .th-heigh-width{
@@ -63,8 +63,8 @@
                     transform: translate(-0%, -0%) scale(1);
                 }
             }
-            
-            
+
+
             .my-modal{
                 background-color: white;
                 border-radius: 5px;
