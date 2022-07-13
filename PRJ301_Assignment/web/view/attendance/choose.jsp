@@ -50,6 +50,9 @@
                                     <td>
                                         <a href="View?session=${se.sessionID}"> View </a>
                                     </td>
+                                    <td>
+                                        <a href="Edit?session=${se.sessionID}"> Edit </a>
+                                    </td>
                                 </c:if>
                             </tr>
 

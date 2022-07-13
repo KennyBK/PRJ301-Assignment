@@ -50,7 +50,7 @@ public class ChooseController extends HttpServlet {
         LocalDate now = LocalDate.now();
         Date date = Date.valueOf(now);
         SessionDBContext sdb = new SessionDBContext();
-        ArrayList<Session> sessionInADay = sdb.getSessionInADay("hongdt30", Date.valueOf("2022-05-10"));
+        ArrayList<Session> sessionInADay = sdb.getSessionInADay("sonnt5", Date.valueOf("2022-06-03"));
         ArrayList<Boolean> check = new ArrayList<>();
         AttendanceDBContext adb = new AttendanceDBContext();
         
