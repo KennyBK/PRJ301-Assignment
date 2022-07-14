@@ -4,6 +4,7 @@
  */
 package controller;
 
+import dal.AttendanceDBContext;
 import dal.SessionDBContext;
 import dal.TimeslotDBContext;
 import java.io.IOException;
@@ -18,6 +19,9 @@ import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashMap;
+import model.Account;
+import model.Attendance;
+import model.Role;
 import model.Session;
 import model.Timeslot;
 
@@ -25,7 +29,7 @@ import model.Timeslot;
  *
  * @author ACER
  */
-public class ScheduleController extends HttpServlet {
+public class ScheduleController extends BaseRequiredAuthenticationController {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -93,7 +97,7 @@ public class ScheduleController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void processGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         years = listYear(2019, 2023);
 
@@ -120,7 +124,38 @@ public class ScheduleController extends HttpServlet {
         ArrayList<Timeslot> timeslots = tdb.list();
 
         SessionDBContext sdb = new SessionDBContext();
-        ArrayList<Session> sessions = sdb.getListSessionInSpecificWeek(startDate, endDate);
+        ArrayList<Session> sessions = new ArrayList<>();
+        Account a = (Account) request.getSession().getAttribute("account");
+        String StudentID = null;
+        String InstructorID = null;
+        AttendanceDBContext adb = new AttendanceDBContext();
+        HashMap<Session, String> sessionstatus = new HashMap<>();
+        for (Role r : a.getRoles()) {
+            if (r.getRid() == 1) {
+                InstructorID = a.getId();
+                sessions = sdb.getListSessionInSpecificWeekByInstructor(startDate, endDate, InstructorID);
+                for (Session session : sessions) {
+                    boolean status = adb.isTakeAttendance(session.getSessionID());
+                    if (status) {
+                        sessionstatus.put(session, "present");
+                    } else {
+                        sessionstatus.put(session, "Not yet");
+                    }
+                }
+            }
+            if (r.getRid() == 2) {
+                StudentID = a.getId();
+                sessions = sdb.getListSessionInSpecificWeekByStudent(startDate, endDate, StudentID);
+                for (Session session : sessions) {
+                    Attendance status = adb.getAttendance(session.getSessionID(), StudentID);
+                    if (status != null) {
+                        sessionstatus.put(session, status.getStatus());
+                    } else {
+                        sessionstatus.put(session, "Not yet");
+                    }
+                }
+            }
+        }
 
         ArrayList<Date> datesinweek = new ArrayList<>();
         Date begindate = startDate;
@@ -135,7 +170,7 @@ public class ScheduleController extends HttpServlet {
         request.setAttribute("firstkey", firstKey);
         request.setAttribute("weekinayear", weeks);
         request.setAttribute("datesinweek", datesinweek);
-        request.setAttribute("sessions", sessions);
+        request.setAttribute("sessions", sessionstatus);
         request.setAttribute("timeslots", timeslots);
         request.getRequestDispatcher("/view/schedule/schedule.jsp").forward(request, response);
     }
@@ -149,7 +184,7 @@ public class ScheduleController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Date startDate = null;
         Date endDate = null;
@@ -191,8 +226,38 @@ public class ScheduleController extends HttpServlet {
         ArrayList<Timeslot> timeslots = tdb.list();
 
         SessionDBContext sdb = new SessionDBContext();
-        ArrayList<Session> sessions = sdb.getListSessionInSpecificWeek(startDate, endDate);
-
+        ArrayList<Session> sessions = new ArrayList<>();
+        Account a = (Account) request.getSession().getAttribute("account");
+        String StudentID = null;
+        String InstructorID = null;
+        AttendanceDBContext adb = new AttendanceDBContext();
+        HashMap<Session, String> sessionstatus = new HashMap<>();
+        for (Role r : a.getRoles()) {
+            if (r.getRid() == 1) {
+                InstructorID = a.getId();
+                sessions = sdb.getListSessionInSpecificWeekByInstructor(startDate, endDate, InstructorID);
+                for (Session session : sessions) {
+                    boolean status = adb.isTakeAttendance(session.getSessionID());
+                    if (status) {
+                        sessionstatus.put(session, "present");
+                    } else {
+                        sessionstatus.put(session, "Not yet");
+                    }
+                }
+            }
+            if (r.getRid() == 2) {
+                StudentID = a.getId();
+                sessions = sdb.getListSessionInSpecificWeekByStudent(startDate, endDate, StudentID);
+                for (Session session : sessions) {
+                    Attendance status = adb.getAttendance(session.getSessionID(), StudentID);
+                    if (status != null) {
+                        sessionstatus.put(session, status.getStatus());
+                    } else {
+                        sessionstatus.put(session, "Not yet");
+                    }
+                }
+            }
+        }
         ArrayList<Date> datesinweek = new ArrayList<>();
         Date begindate = startDate;
 
@@ -205,7 +270,7 @@ public class ScheduleController extends HttpServlet {
         request.setAttribute("years", years);
         request.setAttribute("weekinayear", weeks);
         request.setAttribute("datesinweek", datesinweek);
-        request.setAttribute("sessions", sessions);
+        request.setAttribute("sessions", sessionstatus);
         request.setAttribute("timeslots", timeslots);
         request.getRequestDispatcher("/view/schedule/schedule.jsp").forward(request, response);
     }

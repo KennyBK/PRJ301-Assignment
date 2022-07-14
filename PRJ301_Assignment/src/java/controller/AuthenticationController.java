@@ -4,24 +4,21 @@
  */
 package controller;
 
-import dal.AttendanceDBContext;
+import dal.AccountDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.Time;
-import java.util.ArrayList;
-import model.Attendance;
-import model.Session;
-import model.Student;
+import jakarta.servlet.http.HttpSession;
+import model.Account;
 
 /**
  *
- * @author ACER
+ * @author Ngo Tung Son
  */
-public class EditController extends HttpServlet {
+public class AuthenticationController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,16 +43,10 @@ public class EditController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    private int sessionID;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String sessionID = request.getParameter("session");
-        this.sessionID = Integer.parseInt(sessionID);
-        AttendanceDBContext adb = new AttendanceDBContext();
-        ArrayList<Attendance> listAttendanceInASession = adb.listAttendanceInASession(this.sessionID);
-        request.setAttribute("attendances", listAttendanceInASession);
-        request.getRequestDispatcher("view/attendance/edit.jsp").forward(request, response);
+        request.getRequestDispatcher("view/account/login.jsp").forward(request, response);
     }
 
     /**
@@ -69,35 +60,18 @@ public class EditController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String[] studentIDs = request.getParameterValues("studentID");
-        ArrayList<Attendance> attendances = new ArrayList<>();
-        for (String studentID : studentIDs) {
-            Attendance a = new Attendance();
-            Student s = new Student();
-            s.setStudentID(studentID);
-            Session se = new Session();
-            se.setSessionID(sessionID);
-            a.setSessionID(se);
-            a.setStudentID(s);
-            a.setStatus(request.getParameter("status_" + studentID));
-            a.setCommment(request.getParameter("comment_" + studentID));
-            Time t = Time.valueOf(request.getParameter("recordtime_" + studentID));
-            a.setRecordtime(t);
-            attendances.add(a);
+        String username = request.getParameter("user");
+        String password = request.getParameter("pass");
+        AccountDBContext db = new AccountDBContext();
+        Account account = db.get(username, password);
+        if (account == null) {
+            response.getWriter().println("Login failed!");
+        } else {
+            HttpSession session = request.getSession();
+            session.setAttribute("account", account);
+            response.getWriter().println("Login successfully! ");
         }
-        AttendanceDBContext adb = new AttendanceDBContext();
-        adb.updateAttendances(attendances);
-        
-    }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    }
 
 }

@@ -55,6 +55,7 @@ public class AttendanceController extends HttpServlet {
         ArrayList<Student> listStudentInAGroup = sdb.listStudentInAGroup(new Integer(groupID));
         request.setAttribute("students", listStudentInAGroup);
         request.getRequestDispatcher("view/attendance/attendance.jsp").forward(request, response);
+        
     } 
     
     

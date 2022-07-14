@@ -16,13 +16,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import model.Account;
 import model.Session;
 
 /**
  *
  * @author ACER
  */
-public class ChooseController extends HttpServlet {
+public class ChooseController extends BaseRequiredAuthenticationController {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -45,12 +46,13 @@ public class ChooseController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void processGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         LocalDate now = LocalDate.now();
         Date date = Date.valueOf(now);
         SessionDBContext sdb = new SessionDBContext();
-        ArrayList<Session> sessionInADay = sdb.getSessionInADay("sonnt5", Date.valueOf("2022-06-03"));
+        Account a = (Account) request.getSession().getAttribute("account");
+        ArrayList<Session> sessionInADay = sdb.getSessionInADay(a.getId(), date);
         ArrayList<Boolean> check = new ArrayList<>();
         AttendanceDBContext adb = new AttendanceDBContext();
         
@@ -71,7 +73,7 @@ public class ChooseController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void processPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         
     }

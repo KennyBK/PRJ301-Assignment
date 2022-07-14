@@ -151,27 +151,40 @@
                                     <c:set var = "flag" value = "false"/>
                                     <c:forEach items="${requestScope.sessions}" var="se" varStatus="loop">
 
-                                        <c:if test="${(se.timeslotID.timeslotID eq t.timeslotID) and (se.sessionDate eq d)}">
+                                        <c:if test="${(se.key.timeslotID.timeslotID eq t.timeslotID) and (se.key.sessionDate eq d)}">
                                             <c:set var = "flag" value = "true"/>
                                             <td>
-                                                <span class="xs-font-size13 course-color">${se.groupID.courseID.courseName}</span>
+                                                <span class="xs-font-size13 course-color">${se.key.groupID.courseID.courseName}</span>
                                                 <div>at 
-                                                    <span class="room-color">${se.roomID.roomID}</span>
+                                                    <span class="room-color">${se.key.roomID.roomID}</span>
                                                 </div>
-                                                <div>${se.timeslotID.start}-${se.timeslotID.end}</div>
-                                                <div>by ${se.instructorID.instructorName}</div> 
+                                                <div>${se.key.timeslotID.start}-${se.key.timeslotID.end}</div>
+                                                <div>by ${se.key.instructorID.instructorName}</div> 
+                                                <div 
+                                                    <c:if test="${se.value eq 'Not yet'}">
+                                                        style="color: purple "
+                                                    </c:if>
+
+                                                    <c:if test="${se.value eq 'absent'}">
+                                                        style="color: red"
+                                                    </c:if>
+
+                                                    <c:if test="${se.value eq 'present'}">
+                                                        style="color: green"
+                                                    </c:if>
+                                                    >(${se.value})</div>
                                                 <button onclick="document.getElementById('${loop.index}modal').classList.toggle('hide')">View</button>
                                             </td>
                                     <div class="modal-container hide" id="${loop.index}modal">
                                         <div class="my-modal">
                                             <a class="close" onclick="document.getElementById('${loop.index}modal').classList.toggle('hide')">&times;</a>
-                                            <div>Date: ${se.sessionDate} </div>
-                                            <div>Slot: ${se.timeslotID.start} - ${se.timeslotID.end} </div>
-                                            <div>Room: ${se.roomID.roomID} </div>
-                                            <div>Group: ${se.groupID.groupID} </div>
-                                            <div>Instructor: ${se.instructorID.instructorID} </div>
-                                            <div>Course: ${se.groupID.courseID.courseID} </div>
-                                            <div>Course session number: ${se.sessionNumber} </div>
+                                            <div>Date: ${se.key.sessionDate} </div>
+                                            <div>Slot: ${se.key.timeslotID.start} - ${se.key.timeslotID.end} </div>
+                                            <div>Room: ${se.key.roomID.roomID} </div>
+                                            <div>Group: <a href="Filter?course=${se.key.groupID.courseID.courseID}&group=${se.key.groupID.groupID}">${se.key.groupID.groupName}</a> </div>
+                                            <div>Instructor: ${se.key.instructorID.instructorID} </div>
+                                            <div>Course: ${se.key.groupID.courseID.courseID} </div>
+                                            <div>Course session number: ${se.key.sessionNumber} </div>
                                         </div>
                                     </div>
                                 </c:if>

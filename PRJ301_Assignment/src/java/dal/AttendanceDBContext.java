@@ -113,6 +113,41 @@ public class AttendanceDBContext extends DBContext<Attendance> {
         }
     }
 
+    public void updateAttendances(ArrayList<Attendance> attendances) {
+        try {
+            connection.setAutoCommit(false);
+            for (Attendance attendance : attendances) {
+                String sql = "UPDATE [dbo].[Attendance]\n"
+                        + "   SET [Status] = ?\n"
+                        + "      ,[Recordtime] = ?\n"
+                        + "      ,[Comment] = ?\n"
+                        + " WHERE [StudentID] = ? and [SessionID] = ?";
+                PreparedStatement stm = connection.prepareStatement(sql);
+                stm.setString(1, attendance.getStatus());
+                stm.setTime(2, attendance.getRecordtime());
+                stm.setString(3, attendance.getCommment());
+                stm.setString(4, attendance.getStudentID().getStudentID());
+                stm.setInt(5, attendance.getSessionID().getSessionID());
+                stm.executeUpdate();
+            }
+            connection.commit();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(AttendanceDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                connection.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(AttendanceDBContext.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(AttendanceDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
     public ArrayList<Attendance> listAttendanceInASession(int sessionID) {
         ArrayList<Attendance> attendances = new ArrayList<>();
         try {
@@ -180,13 +215,37 @@ public class AttendanceDBContext extends DBContext<Attendance> {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, sessionID);
             ResultSet rs = stm.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return true;
             }
         } catch (SQLException ex) {
             Logger.getLogger(AttendanceDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+
+    public Attendance getAttendance(int sessionID,String StudentID) {
+        try {
+            String sql = "Select * from Attendance where StudentID = ? AND SessionID = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, StudentID);
+            stm.setInt(2, sessionID);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                Attendance a = new Attendance();
+                Session se = new Session();
+                Student s = new Student();
+                se.setSessionID(sessionID);
+                s.setStudentID(StudentID);
+                a.setSessionID(se);
+                a.setStudentID(s);
+                a.setStatus(rs.getString("Status"));
+                return a;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AttendanceDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     @Override

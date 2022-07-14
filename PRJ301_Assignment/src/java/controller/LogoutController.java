@@ -5,28 +5,18 @@
 
 package controller;
 
-import dal.AttendanceDBContext;
-import dal.GroupDBContext;
-import dal.SessionDBContext;
-import dal.StudentDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import model.Account;
-import model.Attendance;
-import model.Group;
-import model.Session;
-import model.Student;
 
 /**
  *
  * @author ACER
  */
-public class ReportController extends BaseRequiredAuthenticationController {
+public class LogoutController extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -37,10 +27,7 @@ public class ReportController extends BaseRequiredAuthenticationController {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        GroupDBContext gdb = new GroupDBContext();
-        Account a = (Account) request.getSession().getAttribute("account");
-        ArrayList<Group> listGroupByInstructor = gdb.listGroupByInstructor(a.getId());
-        request.setAttribute("groups", listGroupByInstructor);
+        
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -52,10 +39,10 @@ public class ReportController extends BaseRequiredAuthenticationController {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void processGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
-        request.getRequestDispatcher("view/attendance/report.jsp").forward(request, response);
+        request.getSession().removeAttribute("account");
+        response.sendRedirect("login");
     } 
 
     /** 
@@ -66,21 +53,9 @@ public class ReportController extends BaseRequiredAuthenticationController {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void processPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-        int groupID = Integer.parseInt(request.getParameter("group"));
-        StudentDBContext sdb = new StudentDBContext();
-        ArrayList<Student> listStudentInAGroup = sdb.listStudentInAGroup(groupID);
-        SessionDBContext sedb = new SessionDBContext();
-        ArrayList<Session> listSessionInAGroup = sedb.listSessionInAGroup(groupID);
-        AttendanceDBContext adb = new AttendanceDBContext();
-        ArrayList<Attendance> listAttendanceInAGroup = adb.listAttendanceInAGroup(groupID);
-        
-        request.setAttribute("attendances", listAttendanceInAGroup);
-        request.setAttribute("sessions", listSessionInAGroup);
-        request.setAttribute("students", listStudentInAGroup);
-        request.getRequestDispatcher("view/attendance/report.jsp").forward(request, response);
     }
 
     /** 

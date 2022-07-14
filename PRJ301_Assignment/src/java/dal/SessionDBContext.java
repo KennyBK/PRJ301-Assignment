@@ -24,18 +24,79 @@ import model.Timeslot;
  */
 public class SessionDBContext extends DBContext<Session> {
 
-    public ArrayList<Session> getListSessionInSpecificWeek(Date startWeek, Date endWeek) {
+    public ArrayList<Session> getListSessionInSpecificWeekByInstructor(Date startWeek, Date endWeek, String InstructorID) {
         ArrayList<Session> sessions = new ArrayList<>();
         try {
             String sql = "Select ts.TimeslotID,ts.[start],ts.[end],se.SessionID,se.SessionNumber,se.SessionDate,se.Semester,se.RoomID,se.InstructorID,i.InstructorName,g.GroupID,g.GroupName,g.InstructorID,c.CourseID,c.CourseName from Timeslot ts \n"
                     + "join [Session] se On ts.TimeslotID = se.TimeslotID \n"
                     + "join [Group] g On se.GroupID = g.GroupID\n"
                     + "join Course c On g.CourseID = c.CourseID\n"
-                    + "join Instructor i on se.InstructorID = i.InstructorID\n"
-                    + "Where SessionDate Between ? And ?";
+                    + " join Instructor i on se.InstructorID = i.InstructorID\n"
+                    + "Where SessionDate Between ? And ?\n"
+                    + "AND se.InstructorID = ?";
+
             PreparedStatement stm = connection.prepareStatement(sql);
+
             stm.setDate(1, startWeek);
             stm.setDate(2, endWeek);
+            stm.setString(3, InstructorID);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Session se = new Session();
+                se.setSessionID(rs.getInt("SessionID"));
+                se.setSessionNumber(rs.getInt("SessionNumber"));
+                se.setSessionDate(rs.getDate("SessionDate"));
+                se.setSemester(rs.getString("Semester"));
+                Instructor ise = new Instructor();
+                ise.setInstructorID(rs.getString("InstructorID"));
+                ise.setInstructorName(rs.getString("InstructorName"));
+                se.setInstructorID(ise);
+                Room r = new Room();
+                r.setRoomID(rs.getString("RoomID"));
+                se.setRoomID(r);
+                Group g = new Group();
+                g.setGroupID(rs.getInt("GroupID"));
+                g.setGroupName(rs.getString("GroupName"));
+                Instructor i = new Instructor();
+                i.setInstructorID(rs.getString("InstructorID"));
+                g.setInstructorID(i);
+                Course c = new Course();
+                c.setCourseID(rs.getString("CourseID"));
+                c.setCourseName(rs.getString("CourseName"));
+                g.setCourseID(c);
+                se.setGroupID(g);
+                Timeslot ts = new Timeslot();
+                ts.setTimeslotID(rs.getString("TimeslotID"));
+                ts.setStart(rs.getTime("start"));
+                ts.setEnd(rs.getTime("end"));
+                se.setTimeslotID(ts);
+                sessions.add(se);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SessionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sessions;
+    }
+
+    public ArrayList<Session> getListSessionInSpecificWeekByStudent(Date startWeek, Date endWeek, String StudentID) {
+        ArrayList<Session> sessions = new ArrayList<>();
+        try {
+            String sql = "Select ts.TimeslotID,ts.[start],ts.[end],se.SessionID,se.SessionNumber,se.SessionDate,se.Semester,se.RoomID,se.InstructorID,i.InstructorName,g.GroupID,g.GroupName,g.InstructorID,c.CourseID,c.CourseName\n"
+                    + "from \n"
+                    + "Timeslot ts join [Session] se On ts.TimeslotID = se.TimeslotID \n"
+                    + "join [Group] g On se.GroupID = g.GroupID\n"
+                    + "join Course c On g.CourseID = c.CourseID\n"
+                    + "join Instructor i on se.InstructorID = i.InstructorID\n"
+                    + "join StudentGroup sg on g.GroupID = sg.GroupID\n"
+                    + "join Student s on s.StudentID = sg.StudentID\n"
+                    + "Where SessionDate Between ? And ?\n"
+                    + "AND s.StudentID = ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            stm.setDate(1, startWeek);
+            stm.setDate(2, endWeek);
+            stm.setString(3, StudentID);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 Session se = new Session();

@@ -41,29 +41,30 @@
                             <td>${a.studentID.studentEmail}</td>
                             <td>
 
-                                <input type="radio" value="present"
+                                <input type="radio" value="present" name="status_${a.studentID.studentID}"
                                        <c:if test="${a.status eq 'present'}">
                                            checked
                                        </c:if>
                                        <c:if test="${a.status eq 'absent'}">
-                                           onclick="isUpdate('${a.studentID.studentID}', this)"
+                                           onblur="isUpdate('${a.studentID.studentID}', this)"
                                        </c:if>
                                        />Present
 
-                                <input type="radio" value="absent" 
+                                <input type="radio" value="absent" name="status_${a.studentID.studentID}" 
                                        <c:if test="${a.status eq 'absent'}">
                                            checked
                                        </c:if>
                                        <c:if test="${a.status eq 'present'}">
-                                           onclick="isUpdate('${a.studentID.studentID}', this)"
+                                           onblur="isUpdate('${a.studentID.studentID}', this)"
                                        </c:if>
                                        />Absent
+
                             </td>
                             <td>
-                                <input type="text"  value="${a.commment}" onclick="isUpdate('${a.studentID.studentID}', this)"/>
+                                <input type="text"  value="${a.commment}" name="comment_${a.studentID.studentID}" onclick="isUpdate('${a.studentID.studentID}', this)"/>
                             </td>
                             <td hidden>
-                                <input type="text" value="19:00:00" />
+                                <input type="text" value="19:00:00" name="recordtime_${a.studentID.studentID}"/>
                             </td>
                         </tr>
                     </c:forEach>
@@ -73,40 +74,39 @@
             <input type="submit" value="Edit"/>
         </form>
         <script>
-
-            function isUpdateStatus(studentID, e, updatedrow) {
-                var radiod = updatedrow.children[7];
-                var radio1 = radiod.children[0];
-                radio1.setAttribute("name", "status_" + studentID);
-                var radio2 = radiod.children[1];
-                radio2.setAttribute("name", "status_" + studentID);
-                if (e.type == 'radio') {
+            function isUpdateStatus(e, inputs) {
+                var radio1 = inputs[0];
+                var radio2 = inputs[1];
+                if (e.type === 'radio') {
                     radio1.removeAttribute("checked");
                     radio2.removeAttribute("checked");
                     e.setAttribute("checked", "checked");
                 }
-                e.removeAttribute("onclick");
+                radio1.removeAttribute("onblur");
+                radio2.removeAttribute("onblur");
             }
 
-            function isUpdateComment(studentID, updatedrow) {
-                var comment = updatedrow.children[8].children[0];
-                comment.setAttribute("name", "comment_" + studentID);
+            function isUpdateComment(inputs) {
+                var comment = inputs[2];
+
                 comment.removeAttribute("onclick");
+
             }
-
             function isUpdate(studentID, e) {
+
                 var updatedrow = document.getElementById(studentID);
-                isUpdateStatus(studentID, e, updatedrow);
-                isUpdateComment(studentID, updatedrow);
+                var inputs = document.querySelectorAll("#" + studentID + " input");
+//                var inputs = updatedrow.getElementsByTagName("input");
+//                console.log(inputs);
+//                for (var i = 0; i < inputs.length; i++) {
+//                    console.log(inputs[i]);
+//                    inputs[i].removeAttribute("onblur");
+//                    console.log(inputs[i]);
+//                }
+                isUpdateComment(inputs);
+                isUpdateStatus(e, inputs);
 
-
-                var recordtimed = updatedrow.children[9];
-                var recordtime = recordtimed.children[0];
-                recordtime.setAttribute("name", "recordtime_" + studentID);
-                var sid = document.getElementById()(studentID + "_input");
-                if (sid == null) {
-                    updatedrow.innerHTML += "<input type=\"text\" value=" + studentID + " name=\"studentID\" id=\""+studentID+"_input\" hidden/>";
-                }
+                updatedrow.innerHTML += "<input type=\"text\" value=" + studentID + " name=\"studentID\" hidden/>";
             }
         </script>
     </body>

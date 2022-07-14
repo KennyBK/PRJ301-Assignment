@@ -21,16 +21,20 @@
         <servlet-class>controller.ReportController</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>DisplaySessionController</servlet-name>
-        <servlet-class>controller.DisplaySessionController</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>EditController</servlet-name>
         <servlet-class>controller.EditController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ViewController</servlet-name>
         <servlet-class>controller.ViewController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LogoutController</servlet-name>
+        <servlet-class>controller.LogoutController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AuthenticationController</servlet-name>
+        <servlet-class>controller.AuthenticationController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>ScheduleController</servlet-name>
@@ -53,16 +57,20 @@
         <url-pattern>/Report</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>DisplaySessionController</servlet-name>
-        <url-pattern>/DisplaySession</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>EditController</servlet-name>
         <url-pattern>/Edit</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ViewController</servlet-name>
         <url-pattern>/View</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutController</servlet-name>
+        <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AuthenticationController</servlet-name>
+        <url-pattern>/login</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
