@@ -15,10 +15,11 @@ public class Group {
     private String GroupName;
     private Instructor InstructorID;
     private Course CourseID;
-    private Student StudentID;
+    //private Student StudentID;
     private ArrayList<Session> sessions = new ArrayList<>();
     private ArrayList<StudentGroup> studentgroups = new ArrayList<>();
-
+    
+    /*
     public Student getStudentID() {
         return StudentID;
     }
@@ -30,7 +31,8 @@ public class Group {
     public ArrayList<Session> getSessions() {
         return sessions;
     }
-
+    */
+    
     public void setSessions(ArrayList<Session> sessions) {
         this.sessions = sessions;
     }

@@ -87,7 +87,12 @@
     </head>
     <body>
         <div class="container">
-            <div>Student: A</div>
+            <c:if test="${sessionScope.account.roles[0].rname eq 'Student'}">
+                <h2> Activities for ${requestScope.student.studentCode}(${requestScope.student.studentSurname} ${requestScope.student.studentMiddlename} ${requestScope.student.studentGivenname}) </h2>
+            </c:if>
+            <c:if test="${sessionScope.account.roles[0].rname eq 'Instructor'}">
+                <h2> Activities for ${requestScope.instructor.instructorName} </h2>
+            </c:if>
             <div class="table-responsive">
                 <table class="table table-bordered text-center">
                     <thead class="thead-light">
@@ -154,12 +159,12 @@
                                         <c:if test="${(se.key.timeslotID.timeslotID eq t.timeslotID) and (se.key.sessionDate eq d)}">
                                             <c:set var = "flag" value = "true"/>
                                             <td>
-                                                <span class="xs-font-size13 course-color">${se.key.groupID.courseID.courseName}</span>
+                                                <span class="xs-font-size13 course-color">${se.key.groupID.courseID.courseID}</span>
                                                 <div>at 
                                                     <span class="room-color">${se.key.roomID.roomID}</span>
                                                 </div>
-                                                <div>${se.key.timeslotID.start}-${se.key.timeslotID.end}</div>
-                                                <div>by ${se.key.instructorID.instructorName}</div> 
+                                                <div><fmt:formatDate type="time" value="${se.key.timeslotID.start}" pattern="HH:mm"/> - <fmt:formatDate type="time" value="${se.key.timeslotID.end}" pattern="HH:mm"/></div>
+                                                <div>by ${se.key.instructorID.instructorID}</div> 
                                                 <div 
                                                     <c:if test="${se.value eq 'Not yet'}">
                                                         style="color: purple "
@@ -178,12 +183,12 @@
                                     <div class="modal-container hide" id="${loop.index}modal">
                                         <div class="my-modal">
                                             <a class="close" onclick="document.getElementById('${loop.index}modal').classList.toggle('hide')">&times;</a>
-                                            <div>Date: ${se.key.sessionDate} </div>
-                                            <div>Slot: ${se.key.timeslotID.start} - ${se.key.timeslotID.end} </div>
+                                            <div>Date: <fmt:formatDate value="${se.key.sessionDate}" pattern="dd/MM/yyyy"/></div>
+                                            <div>Slot: <fmt:formatDate type="time" value="${se.key.timeslotID.start}" pattern="HH:mm"/> - <fmt:formatDate type="time" value="${se.key.timeslotID.end}" pattern="HH:mm"/> </div>
                                             <div>Room: ${se.key.roomID.roomID} </div>
                                             <div>Group: <a href="Filter?course=${se.key.groupID.courseID.courseID}&group=${se.key.groupID.groupID}">${se.key.groupID.groupName}</a> </div>
-                                            <div>Instructor: ${se.key.instructorID.instructorID} </div>
-                                            <div>Course: ${se.key.groupID.courseID.courseID} </div>
+                                            <div>Instructor: ${se.key.instructorID.instructorName} </div>
+                                            <div>Course: ${se.key.groupID.courseID.courseName} </div>
                                             <div>Course session number: ${se.key.sessionNumber} </div>
                                         </div>
                                     </div>

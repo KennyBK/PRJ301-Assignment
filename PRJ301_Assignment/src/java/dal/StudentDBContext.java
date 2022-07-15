@@ -31,7 +31,7 @@ public class StudentDBContext extends DBContext<Student> {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, GroupID);
             ResultSet rs = stm.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Student s = new Student();
                 s.setStudentID(rs.getString("StudentID"));
                 s.setStudentCode(rs.getString("StudentCode"));
@@ -55,6 +55,29 @@ public class StudentDBContext extends DBContext<Student> {
             Logger.getLogger(StudentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return students;
+    }
+
+    public Student getStudentInformation(String StudentID) {
+        try {
+            String sql = "SELECT StudentID,StudentCode,StudentSurname,StudentMiddlename,StudentGivenname,StudentEmail FROM Student\n"
+                    + "Where StudentID = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, StudentID);
+            ResultSet rs = stm.executeQuery();
+            if(rs.next()){
+                Student s = new Student();
+                s.setStudentID(rs.getString("StudentID"));
+                s.setStudentCode(rs.getString("StudentCode"));
+                s.setStudentSurname(rs.getString("StudentSurname"));
+                s.setStudentMiddlename(rs.getString("StudentMiddlename"));
+                s.setStudentGivenname(rs.getString("StudentGivenname"));
+                s.setStudentEmail(rs.getString("StudentEmail"));
+                return s;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     @Override

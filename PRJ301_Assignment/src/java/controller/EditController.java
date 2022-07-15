@@ -47,6 +47,7 @@ public class EditController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     private int sessionID;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -87,7 +88,8 @@ public class EditController extends HttpServlet {
         }
         AttendanceDBContext adb = new AttendanceDBContext();
         adb.updateAttendances(attendances);
-        
+        request.setAttribute("action", "Edit");
+        request.getRequestDispatcher("view/attendance/action_confirm.jsp").forward(request, response);
     }
 
     /**

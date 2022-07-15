@@ -4,7 +4,9 @@
     Author     : ACER
 --%>
 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="/WEB-INF/CompareTime" prefix="my"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -30,7 +32,7 @@
                         <c:forEach items="${requestScope.sessions}" var="se" varStatus="loop">
                             <tr>
                                 <td>
-                                    ${se.timeslotID.start} - ${se.timeslotID.end} ${se.sessionDate}
+                                    <fmt:formatDate type="time" value="${se.timeslotID.start}" pattern="HH:mm"/> - <fmt:formatDate type="time" value="${se.timeslotID.end}" pattern="HH:mm"/> <fmt:formatDate value="${se.sessionDate}" pattern="dd/MM/yyyy"/>
                                 </td>
                                 <td>
                                     ${se.roomID.roomID}
@@ -42,9 +44,18 @@
                                     ${se.groupID.courseID.courseName} (${se.groupID.courseID.courseID})
                                 </td>
                                 <c:if test="${not requestScope.check[loop.index]}">
-                                    <td>
-                                        <a href="Attendance?group=${se.groupID.groupID}&session=${se.sessionID}"> Take </a>
-                                    </td>
+                                    <my:CompareTime start="${se.timeslotID.start}" end="${se.timeslotID.end}"/>
+                                    <c:if test="${pageScope.check}">
+                                        <td>
+                                            <a href="Attendance?group=${se.groupID.groupID}&session=${se.sessionID}"> Take </a>
+
+                                        </td>
+                                    </c:if>
+                                    <c:if test="${not pageScope.check}">
+                                        <td>
+                                            Closing
+                                        </td>
+                                    </c:if>
                                 </c:if>
                                 <c:if test="${requestScope.check[loop.index]}">
                                     <td>

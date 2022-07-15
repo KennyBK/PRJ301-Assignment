@@ -5,7 +5,9 @@
 package controller;
 
 import dal.AttendanceDBContext;
+import dal.InstructorDBContext;
 import dal.SessionDBContext;
+import dal.StudentDBContext;
 import dal.TimeslotDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,8 +23,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import model.Account;
 import model.Attendance;
+import model.Instructor;
 import model.Role;
 import model.Session;
+import model.Student;
 import model.Timeslot;
 
 /**
@@ -123,7 +127,7 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
         TimeslotDBContext tdb = new TimeslotDBContext();
         ArrayList<Timeslot> timeslots = tdb.list();
 
-        SessionDBContext sdb = new SessionDBContext();
+        SessionDBContext sedb = new SessionDBContext();
         ArrayList<Session> sessions = new ArrayList<>();
         Account a = (Account) request.getSession().getAttribute("account");
         String StudentID = null;
@@ -133,7 +137,10 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
         for (Role r : a.getRoles()) {
             if (r.getRid() == 1) {
                 InstructorID = a.getId();
-                sessions = sdb.getListSessionInSpecificWeekByInstructor(startDate, endDate, InstructorID);
+                InstructorDBContext idb = new InstructorDBContext();
+                Instructor iinform = idb.getInstructorInformation(InstructorID);
+                request.setAttribute("instructor", iinform);
+                sessions = sedb.getListSessionInSpecificWeekByInstructor(startDate, endDate, InstructorID);
                 for (Session session : sessions) {
                     boolean status = adb.isTakeAttendance(session.getSessionID());
                     if (status) {
@@ -145,7 +152,11 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
             }
             if (r.getRid() == 2) {
                 StudentID = a.getId();
-                sessions = sdb.getListSessionInSpecificWeekByStudent(startDate, endDate, StudentID);
+                StudentDBContext sdb = new StudentDBContext();
+                Student sinform = sdb.getStudentInformation(StudentID);
+                request.setAttribute("student", sinform);
+                sessions = sedb.getListSessionInSpecificWeekByStudent(startDate, endDate, StudentID);
+
                 for (Session session : sessions) {
                     Attendance status = adb.getAttendance(session.getSessionID(), StudentID);
                     if (status != null) {
@@ -225,7 +236,7 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
         TimeslotDBContext tdb = new TimeslotDBContext();
         ArrayList<Timeslot> timeslots = tdb.list();
 
-        SessionDBContext sdb = new SessionDBContext();
+        SessionDBContext sedb = new SessionDBContext();
         ArrayList<Session> sessions = new ArrayList<>();
         Account a = (Account) request.getSession().getAttribute("account");
         String StudentID = null;
@@ -235,7 +246,10 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
         for (Role r : a.getRoles()) {
             if (r.getRid() == 1) {
                 InstructorID = a.getId();
-                sessions = sdb.getListSessionInSpecificWeekByInstructor(startDate, endDate, InstructorID);
+                InstructorDBContext idb = new InstructorDBContext();
+                Instructor iinform = idb.getInstructorInformation(InstructorID);
+                request.setAttribute("instructor", iinform);
+                sessions = sedb.getListSessionInSpecificWeekByInstructor(startDate, endDate, InstructorID);
                 for (Session session : sessions) {
                     boolean status = adb.isTakeAttendance(session.getSessionID());
                     if (status) {
@@ -247,7 +261,11 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
             }
             if (r.getRid() == 2) {
                 StudentID = a.getId();
-                sessions = sdb.getListSessionInSpecificWeekByStudent(startDate, endDate, StudentID);
+                StudentDBContext sdb = new StudentDBContext();
+                Student sinform = sdb.getStudentInformation(StudentID);
+                request.setAttribute("student", sinform);
+                sessions = sedb.getListSessionInSpecificWeekByStudent(startDate, endDate, StudentID);
+
                 for (Session session : sessions) {
                     Attendance status = adb.getAttendance(session.getSessionID(), StudentID);
                     if (status != null) {

@@ -4,6 +4,7 @@
     Author     : ACER
 --%>
 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -14,6 +15,8 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     </head>
     <body>
+        <jsp:useBean id="now" class="java.util.Date" />
+        <fmt:formatDate var="time" value="${now}" pattern="HH:mm:ss" /> 
         <form method="POST" action="Edit">
             <table class="sortable table" >
                 <thead>
@@ -64,7 +67,7 @@
                                 <input type="text"  value="${a.commment}" name="comment_${a.studentID.studentID}" onclick="isUpdate('${a.studentID.studentID}', this)"/>
                             </td>
                             <td hidden>
-                                <input type="text" value="19:00:00" name="recordtime_${a.studentID.studentID}"/>
+                                <input type="text" value="${time}" name="recordtime_${a.studentID.studentID}"/>
                             </td>
                         </tr>
                     </c:forEach>

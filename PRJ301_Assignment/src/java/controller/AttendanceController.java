@@ -90,6 +90,8 @@ public class AttendanceController extends HttpServlet {
         
         AttendanceDBContext adb = new AttendanceDBContext();
         adb.takeAttendances(attendances);
+        request.setAttribute("action", "Take");
+        request.getRequestDispatcher("view/attendance/action_confirm.jsp").forward(request, response);
     }
 
     /** 
