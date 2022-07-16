@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Schedule</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous"> 
         <!--<link href="css/schedule/schedule.css" rel="stylesheet" type="text/css"/>  -->
         <script src="js/changeschedule.js" type="text/javascript"></script>
@@ -87,7 +87,7 @@
     </head>
     <body>
         <jsp:include page="../landing/header.jsp"></jsp:include>
-        <div class="container">
+            <div class="container">
             <c:if test="${sessionScope.account.roles[0].rname eq 'Student'}">
                 <h2> Activities for ${requestScope.student.studentCode}(${requestScope.student.studentSurname} ${requestScope.student.studentMiddlename} ${requestScope.student.studentGivenname}) </h2>
             </c:if>
@@ -179,7 +179,8 @@
                                                         style="color: green"
                                                     </c:if>
                                                     >(${se.value})</div>
-                                                <button onclick="document.getElementById('${loop.index}modal').classList.toggle('hide')">View</button>
+
+                                                <button type="button" class="btn btn-outline-dark" style="margin-top: 2px;" onclick="document.getElementById('${loop.index}modal').classList.toggle('hide')">View</button>
                                             </td>
                                     <div class="modal-container hide" id="${loop.index}modal">
                                         <div class="my-modal">
@@ -191,6 +192,10 @@
                                             <div>Instructor: ${se.key.instructorID.instructorName} </div>
                                             <div>Course: ${se.key.groupID.courseID.courseName} </div>
                                             <div>Course session number: ${se.key.sessionNumber} </div>
+                                            <c:if test="${se.value eq 'absent' or se.value eq 'present'}">
+                                                <a class="btn btn-outline-dark" href="View?session=${se.key.sessionID}" role="button">View Attendance</a>
+
+                                            </c:if>
                                         </div>
                                     </div>
                                 </c:if>
