@@ -86,6 +86,7 @@
         </style>
     </head>
     <body>
+        <jsp:include page="../landing/header.jsp"></jsp:include>
         <div class="container">
             <c:if test="${sessionScope.account.roles[0].rname eq 'Student'}">
                 <h2> Activities for ${requestScope.student.studentCode}(${requestScope.student.studentSurname} ${requestScope.student.studentMiddlename} ${requestScope.student.studentGivenname}) </h2>

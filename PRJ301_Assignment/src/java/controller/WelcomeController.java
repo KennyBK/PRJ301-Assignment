@@ -4,21 +4,26 @@
  */
 package controller;
 
-import dal.AccountDBContext;
+import dal.InstructorDBContext;
+import dal.StudentDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import model.Account;
+import model.Attendance;
+import model.Instructor;
+import model.Role;
+import model.Session;
+import model.Student;
 
 /**
  *
- * @author Ngo Tung Son
+ * @author ACER
  */
-public class AuthenticationController extends HttpServlet {
+public class WelcomeController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,7 +51,26 @@ public class AuthenticationController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("view/account/login.jsp").forward(request, response);
+        String StudentID = null;
+        String InstructorID = null;
+        Account a = (Account) request.getSession().getAttribute("account");
+        for (Role r : a.getRoles()) {
+            if (r.getRid() == 1) {
+                InstructorID = a.getId();
+                InstructorDBContext idb = new InstructorDBContext();
+                Instructor iinform = idb.getInstructorInformation(InstructorID);
+                request.setAttribute("instructor", iinform);
+
+            }
+            if (r.getRid() == 2) {
+                StudentID = a.getId();
+                StudentDBContext sdb = new StudentDBContext();
+                Student sinform = sdb.getStudentInformation(StudentID);
+                request.setAttribute("student", sinform);
+
+            }
+        }
+        request.getRequestDispatcher("view/landing/welcome.jsp").forward(request, response);
     }
 
     /**
@@ -60,19 +84,17 @@ public class AuthenticationController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = request.getParameter("user");
-        String password = request.getParameter("pass");
-        AccountDBContext db = new AccountDBContext();
-        Account account = db.get(username, password);
-        if (account == null) {
-            request.setAttribute("mess", "Login Failed! Please try again");
-            request.getRequestDispatcher("view/account/login.jsp").forward(request, response);
-        } else {
-            HttpSession session = request.getSession();
-            session.setAttribute("account", account);
-            response.sendRedirect("welcome");
-        }
-
+        processRequest(request, response);
     }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
 
 }

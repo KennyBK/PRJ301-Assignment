@@ -17,6 +17,8 @@
 
     </head>
     <body>
+        <jsp:include page="../landing/header.jsp"></jsp:include>
+        <br/>
         <div class="container">
             <div class="table-responsive">
                 <table class="table table-bordered text-center">
