@@ -100,39 +100,21 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
                 .with(WeekFields.of(DayOfWeek.MONDAY, 7).weekOfWeekBasedYear(), weekNumber);
     }
 
-    @Override
-    protected void processGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        years = listYear(2019, 2023);
-
-        LocalDate now = LocalDate.now();
-        LocalDate firstDateOfWeekOfAYear = getFirstDayOfWeek(now.getYear(), 1);
-        weeks = listWeek(firstDateOfWeekOfAYear.getYear(), firstDateOfWeekOfAYear.getMonthValue(), firstDateOfWeekOfAYear.getDayOfMonth());
-        Date date_now = Date.valueOf(now);
-
-        Date startDate = null;
-        Date endDate = null;
-
-        Integer firstKey = null;
-        for (Integer key : weeks.keySet()) {
-            Date firstDayOftheWeek = weeks.get(key).get(0);
-            Date lastDayOftheWeek = weeks.get(key).get(1);
-            if (date_now.compareTo(firstDayOftheWeek) >= 0 && date_now.compareTo(lastDayOftheWeek) <= 0) {
-                startDate = firstDayOftheWeek;
-                endDate = lastDayOftheWeek;
-                firstKey = key;
-                break;
-            }
-        }
-        TimeslotDBContext tdb = new TimeslotDBContext();
-        ArrayList<Timeslot> timeslots = tdb.list();
-
-        SessionDBContext sedb = new SessionDBContext();
-        ArrayList<Session> sessions = new ArrayList<>();
+    LocalDate now = LocalDate.now();
+    Date date_now = Date.valueOf(now);
+    Date startDate;
+    Date endDate;
+    TimeslotDBContext tdb = new TimeslotDBContext();
+    ArrayList<Timeslot> timeslots = tdb.list();
+    Integer firstKey;
+    SessionDBContext sedb = new SessionDBContext();
+    AttendanceDBContext adb = new AttendanceDBContext();
+    
+    public HashMap<Session, String> getSessionStatus(HttpServletRequest request) {
         Account a = (Account) request.getSession().getAttribute("account");
         String StudentID = null;
         String InstructorID = null;
-        AttendanceDBContext adb = new AttendanceDBContext();
+        ArrayList<Session> sessions = new ArrayList<>();
         HashMap<Session, String> sessionstatus = new HashMap<>();
         for (Role r : a.getRoles()) {
             if (r.getRid() == 1) {
@@ -146,7 +128,7 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
                     if (status) {
                         sessionstatus.put(session, "present");
                     } else {
-                        sessionstatus.put(session, "Not yet");
+                        sessionstatus.put(session, "not yet");
                     }
                 }
             }
@@ -162,12 +144,15 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
                     if (status != null) {
                         sessionstatus.put(session, status.getStatus());
                     } else {
-                        sessionstatus.put(session, "Not yet");
+                        sessionstatus.put(session, "not yet");
                     }
                 }
             }
         }
+        return sessionstatus;
+    }
 
+    public ArrayList<Date> getDatesInAWeek() {
         ArrayList<Date> datesinweek = new ArrayList<>();
         Date begindate = startDate;
 
@@ -176,6 +161,34 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
             LocalDate nextDay = begindate.toLocalDate().plusDays(1);
             begindate = Date.valueOf(nextDay);
         }
+        return datesinweek;
+    }
+
+    public void getWeekAtTheMoment() {
+        for (Integer key : weeks.keySet()) {
+            Date firstDayOftheWeek = weeks.get(key).get(0);
+            Date lastDayOftheWeek = weeks.get(key).get(1);
+            if (date_now.compareTo(firstDayOftheWeek) >= 0 && date_now.compareTo(lastDayOftheWeek) <= 0) {
+                startDate = firstDayOftheWeek;
+                endDate = lastDayOftheWeek;
+                firstKey = key;
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected void processGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        years = listYear(2019, 2023);
+
+        LocalDate firstDateOfWeekOfAYear = getFirstDayOfWeek(now.getYear(), 1);
+        weeks = listWeek(firstDateOfWeekOfAYear.getYear(), firstDateOfWeekOfAYear.getMonthValue(), firstDateOfWeekOfAYear.getDayOfMonth());
+
+        getWeekAtTheMoment();
+
+        HashMap<Session, String> sessionstatus = getSessionStatus(request);
+        ArrayList<Date> datesinweek = getDatesInAWeek();
 
         request.setAttribute("years", years);
         request.setAttribute("firstkey", firstKey);
@@ -197,8 +210,6 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
     @Override
     protected void processPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Date startDate = null;
-        Date endDate = null;
 
         String year = request.getParameter("year");
         String value = request.getParameter("period");
@@ -208,20 +219,8 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
 
             startDate = weeks.get(1).get(0);
             endDate = weeks.get(1).get(1);
-            LocalDate now = LocalDate.now();
-            Date date_now = Date.valueOf(now);
             if (Integer.parseInt(year) == now.getYear()) {
-                Integer firstKey = null;
-                for (Integer key : weeks.keySet()) {
-                    Date firstDayOftheWeek = weeks.get(key).get(0);
-                    Date lastDayOftheWeek = weeks.get(key).get(1);
-                    if (date_now.compareTo(firstDayOftheWeek) >= 0 && date_now.compareTo(lastDayOftheWeek) <= 0) {
-                        startDate = firstDayOftheWeek;
-                        endDate = lastDayOftheWeek;
-                        firstKey = key;
-                        break;
-                    }
-                }
+                getWeekAtTheMoment();
                 request.setAttribute("firstkey", firstKey);
             }
         }
@@ -233,57 +232,8 @@ public class ScheduleController extends BaseRequiredAuthenticationController {
             endDate = fromto.get(1);
         }
 
-        TimeslotDBContext tdb = new TimeslotDBContext();
-        ArrayList<Timeslot> timeslots = tdb.list();
-
-        SessionDBContext sedb = new SessionDBContext();
-        ArrayList<Session> sessions = new ArrayList<>();
-        Account a = (Account) request.getSession().getAttribute("account");
-        String StudentID = null;
-        String InstructorID = null;
-        AttendanceDBContext adb = new AttendanceDBContext();
-        HashMap<Session, String> sessionstatus = new HashMap<>();
-        for (Role r : a.getRoles()) {
-            if (r.getRid() == 1) {
-                InstructorID = a.getId();
-                InstructorDBContext idb = new InstructorDBContext();
-                Instructor iinform = idb.getInstructorInformation(InstructorID);
-                request.setAttribute("instructor", iinform);
-                sessions = sedb.getListSessionInSpecificWeekByInstructor(startDate, endDate, InstructorID);
-                for (Session session : sessions) {
-                    boolean status = adb.isTakeAttendance(session.getSessionID());
-                    if (status) {
-                        sessionstatus.put(session, "present");
-                    } else {
-                        sessionstatus.put(session, "Not yet");
-                    }
-                }
-            }
-            if (r.getRid() == 2) {
-                StudentID = a.getId();
-                StudentDBContext sdb = new StudentDBContext();
-                Student sinform = sdb.getStudentInformation(StudentID);
-                request.setAttribute("student", sinform);
-                sessions = sedb.getListSessionInSpecificWeekByStudent(startDate, endDate, StudentID);
-
-                for (Session session : sessions) {
-                    Attendance status = adb.getAttendance(session.getSessionID(), StudentID);
-                    if (status != null) {
-                        sessionstatus.put(session, status.getStatus());
-                    } else {
-                        sessionstatus.put(session, "Not yet");
-                    }
-                }
-            }
-        }
-        ArrayList<Date> datesinweek = new ArrayList<>();
-        Date begindate = startDate;
-
-        while (begindate.compareTo(endDate) <= 0) {
-            datesinweek.add(begindate);
-            LocalDate nextDay = begindate.toLocalDate().plusDays(1);
-            begindate = Date.valueOf(nextDay);
-        }
+        HashMap<Session, String> sessionstatus = getSessionStatus(request);
+        ArrayList<Date> datesinweek = getDatesInAWeek();
 
         request.setAttribute("years", years);
         request.setAttribute("weekinayear", weeks);

@@ -167,7 +167,7 @@
                                                 <div><fmt:formatDate type="time" value="${se.key.timeslotID.start}" pattern="HH:mm"/> - <fmt:formatDate type="time" value="${se.key.timeslotID.end}" pattern="HH:mm"/></div>
                                                 <div>by ${se.key.instructorID.instructorID}</div> 
                                                 <div 
-                                                    <c:if test="${se.value eq 'Not yet'}">
+                                                    <c:if test="${se.value eq 'not yet'}">
                                                         style="color: purple "
                                                     </c:if>
 
