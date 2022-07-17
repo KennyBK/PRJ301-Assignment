@@ -37,6 +37,7 @@
         <header>
             <div class="container_choose">
                 <nav class="nav justify-content-center">
+                    <a class="nav-link border border-warning" style="color:orange " href="welcome">Home</a>
                     <c:forEach items="${sessionScope.account.roles}" var="r">
                         <c:forEach items="${r.features}" var="f">
                             <c:choose>
